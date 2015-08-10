@@ -17,6 +17,12 @@ func TestFormatMoney(t *testing.T) {
 	AssertEqual(t, accounting.FormatMoney(-12345678), "$-12,345,678.00")
 	AssertEqual(t, accounting.FormatMoney(0), "$0.00")
 
+	accounting = Accounting{Symbol: "$", Precision: 0, Format: "%s %v"}
+	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$ 123,456,789")
+	AssertEqual(t, accounting.FormatMoney(12345678), "$ 12,345,678")
+	AssertEqual(t, accounting.FormatMoney(-12345678), "$ -12,345,678")
+	AssertEqual(t, accounting.FormatMoney(0), "$ 0")
+
 	accounting = Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 	AssertEqual(t, accounting.FormatMoney(4999.99), "€4.999,99")
 	AssertEqual(t, accounting.FormatMoney(-4999.99), "€-4.999,99")

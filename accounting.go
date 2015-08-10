@@ -32,7 +32,7 @@ func (accounting *Accounting) init() {
 	}
 
 	if accounting.FormatZero == "" {
-		accounting.FormatZero = "%s0"
+		accounting.FormatZero = strings.Replace(accounting.Format, "%v", "0", -1)
 	}
 }
 

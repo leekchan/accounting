@@ -67,7 +67,7 @@ Thousand       | string | thousand separator | , | .
 Decimal        | string | decimal separator | . | ,
 Format         | string | simple format string allows control of symbol position (%v = value, %s = symbol) | %s%v | %s %v
 FormatNegative | string | format string for negative values | strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1)) | %s (%v)
-FormatZero     | string | format string for zero values | %s0 | %s --
+FormatZero     | string | format string for zero values | strings.Replace(accounting.Format, "%v", "0", -1) | %s --
 
 **Examples:**
 
