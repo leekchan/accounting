@@ -46,6 +46,10 @@ func formatNumberString(x string, precision int, thousand string, decimal string
 	return result + extra
 }
 
+// FormatNumber is a base function of the library which formats a number with custom precision and separators.
+// FormatNumber supports various types of value by runtime reflection.
+// If you don't need runtime type evaluation, please refer to FormatNumberInt or FormatNumberFloat64.
+// (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64)
 func FormatNumber(value interface{}, precision int, thousand string, decimal string) string {
 	v := reflect.ValueOf(value)
 
@@ -70,6 +74,8 @@ func FormatNumber(value interface{}, precision int, thousand string, decimal str
 	return formatNumberString(x, precision, thousand, decimal)
 }
 
+// FormatNumberInt only supports int value. It is faster than FormatNumber,
+// because it does not do any runtime type evaluation.
 func FormatNumberInt(x int, precision int, thousand string, decimal string) string {
 	var result string
 	var minus bool
@@ -100,6 +106,8 @@ func FormatNumberInt(x int, precision int, thousand string, decimal string) stri
 	return result
 }
 
+// FormatNumberFloat64 only supports float64 value.
+// It is faster than FormatNumber, because it does not do any runtime type evaluation.
 func FormatNumberFloat64(x float64, precision int, thousand string, decimal string) string {
 	return formatNumberString(fmt.Sprintf(fmt.Sprintf("%%.%df", precision), x), precision, thousand, decimal)
 }
