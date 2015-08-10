@@ -11,7 +11,7 @@ type Accounting struct {
 	Decimal        string // decimal separator (optional / default: .)
 	Format         string // simple format string allows control of symbol position (%v = value, %s = symbol) (default: %s%v)
 	FormatNegative string // format string for negative values (optional / default: strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1))
-	FormatZero     string // format string for zero values (optional / default: %s0)
+	FormatZero     string // format string for zero values (optional / default: strings.Replace(accounting.Format, "%v", "0", -1))
 }
 
 func (accounting *Accounting) init() {
