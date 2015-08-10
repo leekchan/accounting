@@ -31,6 +31,8 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(1000000, 3, ",", "."), "1,000,000.000")
 	AssertEqual(t, FormatNumber(1000000, 10, " ", "."), "1 000 000.0000000000")
 	AssertEqual(t, FormatNumber(1000000, 10, "   ", "."), "1   000   000.0000000000")
+	AssertEqual(t, FormatNumber(uint(1000000), 3, ",", "."), "1,000,000.000")
+	AssertEqual(t, FormatNumber(false, 3, ",", "."), "")
 }
 
 func TestFormatNumberInt(t *testing.T) {
