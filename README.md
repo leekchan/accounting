@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/leekchan/accounting/badge.svg?branch=master&service=github)](https://coveralls.io/github/leekchan/accounting?branch=master)
 [![GoDoc](https://godoc.org/github.com/leekchan/accounting?status.svg)](https://godoc.org/github.com/leekchan/accounting)
 
-accounting is a library for money and currency formatting. (inspired by (accounting.js)[https://github.com/openexchangerates/accounting.js])
+accounting is a library for money and currency formatting. (inspired by [accounting.js](https://github.com/openexchangerates/accounting.js))
 
 
 ## Quick Start
