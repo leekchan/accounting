@@ -138,7 +138,7 @@ fmt.Println(ac.FormatMoneyInt(0))       // "GBP --"
 
 ## FormatMoneyFloat64(value float64) string
 
-**Caution: Please do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) or [big.Float](http://tip.golang.org/pkg/math/big/#Float) (>= Go 1.5) is highly recommended.**
+**Caution: Please do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) is highly recommended.**
 
 FormatMoneyFloat64 only supports float64 value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
