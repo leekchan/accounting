@@ -216,7 +216,7 @@ FormatNumberInt only supports int value. It is faster than FormatNumber, because
 fmt.Println(accounting.FormatNumberInt(123456789, 3, ",", ".")) // "123,456,789.000"
 ```
 
-## FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string
+## FormatNumberBigRat(value *big.Rat, precision int, thousand string, decimal string) string
 
 FormatNumberBigRat only supports [*big.Rat](https://golang.org/pkg/math/big/#Rat) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
 
