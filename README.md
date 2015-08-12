@@ -162,7 +162,7 @@ fmt.Println(ac.FormatMoneyFloat64(0))       // "GBP --"
 
 ## FormatMoneyBigRat(value *big.Rat) string
 
-FormatMoneyBigRat only supports (*big.Rat)[https://golang.org/pkg/math/big/#Rat] value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
+FormatMoneyBigRat only supports [*big.Rat](https://golang.org/pkg/math/big/#Rat) value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
 
 ## FormatNumber(value interface{}, precision int, thousand string, decimal string) string
@@ -202,4 +202,4 @@ fmt.Println(accounting.FormatNumberFloat64(123456789.213123, 3, ",", ".")) // "1
 
 ## FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string
 
-FormatNumberBigRat only supports (*big.Rat)[https://golang.org/pkg/math/big/#Rat] value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
+FormatNumberBigRat only supports [*big.Rat](https://golang.org/pkg/math/big/#Rat) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
