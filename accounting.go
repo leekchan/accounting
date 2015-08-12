@@ -76,6 +76,9 @@ func (accounting *Accounting) FormatMoneyInt(value int) string {
 
 // FormatMoneyFloat64 only supports float64 value. It is faster than FormatMoney,
 // because it does not do any runtime type evaluation.
+// (Caution: Please do not use float64 to count money.
+// Floats can have errors when you perform operations on them.
+// Using big.Rat is highly recommended.)
 func (accounting *Accounting) FormatMoneyFloat64(value float64) string {
 	accounting.init()
 	formattedNumber := FormatNumberFloat64(value, accounting.Precision, accounting.Thousand, accounting.Decimal)

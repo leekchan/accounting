@@ -72,10 +72,10 @@ func FormatNumber(value interface{}, precision int, thousand string, decimal str
 		case "*big.Rat":
 			x = value.(*big.Rat).FloatString(precision)
 		default:
-			panic ("Unsupported type - " + v.Type().String())
+			panic("Unsupported type - " + v.Type().String())
 		}
 	default:
-		panic ("Unsupported type - " + v.Kind().String())
+		panic("Unsupported type - " + v.Kind().String())
 	}
 
 	return formatNumberString(x, precision, thousand, decimal)
