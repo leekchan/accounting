@@ -33,12 +33,24 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(1000000, 10, " ", "."), "1 000 000.0000000000")
 	AssertEqual(t, FormatNumber(1000000, 10, "   ", "."), "1   000   000.0000000000")
 	AssertEqual(t, FormatNumber(uint(1000000), 3, ",", "."), "1,000,000.000")
-	AssertEqual(t, FormatNumber(false, 3, ",", "."), "")
 
 	AssertEqual(t, FormatNumber(big.NewRat(77777777, 3), 3, ",", "."), "25,925,925.667")
 	AssertEqual(t, FormatNumber(big.NewRat(-77777777, 3), 3, ",", "."), "-25,925,925.667")
 	AssertEqual(t, FormatNumber(big.NewRat(-7777777, 3), 3, ",", "."), "-2,592,592.333")
 	AssertEqual(t, FormatNumber(big.NewRat(-777776, 3), 3, ",", "."), "-259,258.667")
+
+	func() {
+		defer func() {
+			recover()
+		}()
+		FormatNumber(false, 3, ",", ".") // panic: Unsupported type - bool
+	}()
+	func() {
+		defer func() {
+			recover()
+		}()
+		FormatNumber(big.NewInt(1), 3, ",", ".") // panic: Unsupported type - *big.Int
+	}()
 }
 
 func TestFormatNumberInt(t *testing.T) {
