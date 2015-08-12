@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"math/big"
 	"reflect"
 	"strings"
 )
@@ -49,10 +50,9 @@ func formatNumberString(x string, precision int, thousand string, decimal string
 // FormatNumber is a base function of the library which formats a number with custom precision and separators.
 // FormatNumber supports various types of value by runtime reflection.
 // If you don't need runtime type evaluation, please refer to FormatNumberInt or FormatNumberFloat64.
-// (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64)
+// (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat)
 func FormatNumber(value interface{}, precision int, thousand string, decimal string) string {
 	v := reflect.ValueOf(value)
-
 	var x string
 	switch v.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -67,6 +67,11 @@ func FormatNumber(value interface{}, precision int, thousand string, decimal str
 		}
 	case reflect.Float32, reflect.Float64:
 		x = fmt.Sprintf(fmt.Sprintf("%%.%df", precision), v.Float())
+	case reflect.Ptr:
+		switch v.Type().String() {
+		case "*big.Rat":
+			x = value.(*big.Rat).FloatString(precision)
+		}
 	default:
 		return ""
 	}
@@ -110,4 +115,10 @@ func FormatNumberInt(x int, precision int, thousand string, decimal string) stri
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
 func FormatNumberFloat64(x float64, precision int, thousand string, decimal string) string {
 	return formatNumberString(fmt.Sprintf(fmt.Sprintf("%%.%df", precision), x), precision, thousand, decimal)
+}
+
+// FormatNumberBigRat only supports *big.Rat value.
+// It is faster than FormatNumber, because it does not do any runtime type evaluation.
+func FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string {
+	return formatNumberString(x.FloatString(precision), precision, thousand, decimal)
 }

@@ -1,6 +1,7 @@
 package accounting
 
 import (
+	"math/big"
 	"strings"
 )
 
@@ -58,7 +59,7 @@ func (accounting *Accounting) formatMoneyString(formattedNumber string) string {
 // with customisable currency symbol, precision (decimal places), and thousand/decimal separators.
 // FormatMoney supports various types of value by runtime reflection.
 // If you don't need runtime type evaluation, please refer to FormatMoneyInt or FormatMoneyFloat64.
-// (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64)
+// (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat)
 func (accounting *Accounting) FormatMoney(value interface{}) string {
 	accounting.init()
 	formattedNumber := FormatNumber(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
@@ -78,5 +79,13 @@ func (accounting *Accounting) FormatMoneyInt(value int) string {
 func (accounting *Accounting) FormatMoneyFloat64(value float64) string {
 	accounting.init()
 	formattedNumber := FormatNumberFloat64(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
+	return accounting.formatMoneyString(formattedNumber)
+}
+
+// FormatMoneyBigRat only supports *big.Rat value. It is faster than FormatMoney,
+// because it does not do any runtime type evaluation.
+func (accounting *Accounting) FormatMoneyBigRat(value *big.Rat) string {
+	accounting.init()
+	formattedNumber := FormatNumberBigRat(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }

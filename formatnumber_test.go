@@ -2,6 +2,7 @@ package accounting
 
 import (
 	"math"
+	"math/big"
 	"testing"
 )
 
@@ -33,6 +34,11 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(1000000, 10, "   ", "."), "1   000   000.0000000000")
 	AssertEqual(t, FormatNumber(uint(1000000), 3, ",", "."), "1,000,000.000")
 	AssertEqual(t, FormatNumber(false, 3, ",", "."), "")
+
+	AssertEqual(t, FormatNumber(big.NewRat(77777777, 3), 3, ",", "."), "25,925,925.667")
+	AssertEqual(t, FormatNumber(big.NewRat(-77777777, 3), 3, ",", "."), "-25,925,925.667")
+	AssertEqual(t, FormatNumber(big.NewRat(-7777777, 3), 3, ",", "."), "-2,592,592.333")
+	AssertEqual(t, FormatNumber(big.NewRat(-777776, 3), 3, ",", "."), "-259,258.667")
 }
 
 func TestFormatNumberInt(t *testing.T) {
@@ -64,4 +70,11 @@ func TestFormatNumberFloat64(t *testing.T) {
 	AssertEqual(t, FormatNumber(-123.123123, 5, ",", "."), "-123.12312")
 	AssertEqual(t, FormatNumber(-12.123123, 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumber(-1.123123, 5, ",", "."), "-1.12312")
+}
+
+func TestFormatNumberBigRat(t *testing.T) {
+	AssertEqual(t, FormatNumberBigRat(big.NewRat(77777777, 3), 3, ",", "."), "25,925,925.667")
+	AssertEqual(t, FormatNumberBigRat(big.NewRat(-77777777, 3), 3, ",", "."), "-25,925,925.667")
+	AssertEqual(t, FormatNumberBigRat(big.NewRat(-7777777, 3), 3, ",", "."), "-2,592,592.333")
+	AssertEqual(t, FormatNumberBigRat(big.NewRat(-777776, 3), 3, ",", "."), "-259,258.667")
 }

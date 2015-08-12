@@ -86,7 +86,7 @@ FormatMoney is a function for formatting numbers as money values, with customisa
 
 FormatMoney supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatMoneyInt or FormatMoneyFloat64.
 
-* supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64
+* supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat
 
 **Examples:**
 
@@ -135,6 +135,8 @@ fmt.Println(ac.FormatMoneyInt(0))       // "GBP --"
 
 ## FormatMoneyFloat64(value float64) string
 
+**Caution: Do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) or [big.Float](http://tip.golang.org/pkg/math/big/#Float) (>= Go 1.5) is highly recommended.**
+
 FormatMoneyFloat64 only supports float64 value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
 **Examples:**
@@ -158,13 +160,18 @@ fmt.Println(ac.FormatMoneyFloat64(-5000))   // "GBP (5,000)"
 fmt.Println(ac.FormatMoneyFloat64(0))       // "GBP --"
 ```
 
+## FormatMoneyBigRat(value *big.Rat) string
+
+FormatMoneyBigRat only supports (*big.Rat)[https://golang.org/pkg/math/big/#Rat] value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
+
+
 ## FormatNumber(value interface{}, precision int, thousand string, decimal string) string
 
 FormatNumber is a base function of the library which formats a number with custom precision and separators. 
 
 FormatNumber supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatNumberInt or FormatNumberFloat64.
 
-* supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64
+* supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat
 
 **Examples:**
 
@@ -183,7 +190,7 @@ FormatNumberInt only supports int value. It is faster than FormatNumber, because
 fmt.Println(accounting.FormatNumberInt(123456789, 3, ",", ".")) // "123,456,789.000"
 ```
 
-## FormatNumberFloat64(x float64, precision int, thousand string, decimal string) string
+## FormatNumberFloat64(value float64, precision int, thousand string, decimal string) string
 
 FormatNumberFloat64 only supports float64 value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
 
@@ -192,3 +199,7 @@ FormatNumberFloat64 only supports float64 value. It is faster than FormatNumber,
 ```Go
 fmt.Println(accounting.FormatNumberFloat64(123456789.213123, 3, ",", ".")) // "123,456,789.213"
 ```
+
+## FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string
+
+FormatNumberBigRat only supports (*big.Rat)[https://golang.org/pkg/math/big/#Rat] value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
