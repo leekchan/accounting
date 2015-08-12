@@ -19,14 +19,17 @@ package main
 
 import (
     "fmt"
+    "math/big"
 
     "github.com/leekchan/accounting"
 )
 
 func main() {
     ac := accounting.Accounting{Symbol: "$", Precision: 2}
-    fmt.Println(ac.FormatMoney(123456789.213123)) // "$123,456,789.21"
-    fmt.Println(ac.FormatMoney(12345678))         // "$12,345,678.00"
+    fmt.Println(ac.FormatMoney(123456789.213123))         // "$123,456,789.21"
+    fmt.Println(ac.FormatMoney(12345678))                 // "$12,345,678.00"
+    fmt.Println(ac.FormatMoney(big.NewRat(77777777, 3)))  // "$25,925,925.67"
+    fmt.Println(ac.FormatMoney(big.NewRat(-77777777, 3))) // "$-25,925,925.67"
 
     ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
     fmt.Println(ac.FormatMoney(4999.99))  // "€4.999,99"
@@ -135,7 +138,7 @@ fmt.Println(ac.FormatMoneyInt(0))       // "GBP --"
 
 ## FormatMoneyFloat64(value float64) string
 
-**Caution: Do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) or [big.Float](http://tip.golang.org/pkg/math/big/#Float) (>= Go 1.5) is highly recommended.**
+**Caution: Please do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) or [big.Float](http://tip.golang.org/pkg/math/big/#Float) (>= Go 1.5) is highly recommended.**
 
 FormatMoneyFloat64 only supports float64 value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
@@ -164,6 +167,27 @@ fmt.Println(ac.FormatMoneyFloat64(0))       // "GBP --"
 
 FormatMoneyBigRat only supports [*big.Rat](https://golang.org/pkg/math/big/#Rat) value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
+**Examples:**
+
+```Go
+ac = accounting.Accounting{Symbol: "$", Precision: 2}
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "$25,925,925.67"
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "$-25,925,925.67"
+
+ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "€25.925.925,67"
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "€-25.925.925,67"
+
+ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "£ 25,925,926"
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "£ -25,925,926"
+
+ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
+    Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "GBP 25,925,926"
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "GBP (25,925,926)"
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(0, 3)))         // "GBP --"
+```
 
 ## FormatNumber(value interface{}, precision int, thousand string, decimal string) string
 
@@ -203,3 +227,9 @@ fmt.Println(accounting.FormatNumberFloat64(123456789.213123, 3, ",", ".")) // "1
 ## FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string
 
 FormatNumberBigRat only supports [*big.Rat](https://golang.org/pkg/math/big/#Rat) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
+
+**Examples:**
+
+```Go
+fmt.Println(accounting.FormatNumberBigRat(big.NewRat(77777777, 3), 3, ",", ".")) // "25,925,925.667"
+```
