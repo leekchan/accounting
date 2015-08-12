@@ -87,7 +87,7 @@ ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
 
 FormatMoney is a function for formatting numbers as money values, with customisable currency symbol, precision (decimal places), and thousand/decimal separators.
 
-FormatMoney supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatMoneyInt or FormatMoneyFloat64.
+FormatMoney supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatMoneyInt, FormatMoneyBigRat, or FormatMoneyFloat64.
 
 * supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat
 
@@ -195,7 +195,7 @@ fmt.Println(ac.FormatMoneyFloat64(0))       // "GBP --"
 
 FormatNumber is a base function of the library which formats a number with custom precision and separators. 
 
-FormatNumber supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatNumberInt or FormatNumberFloat64.
+FormatNumber supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatNumberInt, FormatNumberBigRat, or FormatNumberFloat64.
 
 * supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat
 
