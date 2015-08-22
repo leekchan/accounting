@@ -1,10 +1,10 @@
 package accounting
 
 import (
-	"math/big"
-	"testing"
-	"runtime"
 	"fmt"
+	"math/big"
+	"runtime"
+	"testing"
 )
 
 func AssertEqual(t *testing.T, x, y string) {
