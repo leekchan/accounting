@@ -46,6 +46,11 @@ func main() {
 }
 ```
 
+## Caution
+
+Please do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) (< Go 1.5) or [big.Float](https://golang.org/pkg/math/big/#Float) (>= Go 1.5) is highly recommended.
+(accounting supports float64, but it is just for convenience.)
+
 ## Initialization
 
 ### Accounting struct
@@ -87,7 +92,7 @@ ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
 
 FormatMoney is a function for formatting numbers as money values, with customisable currency symbol, precision (decimal places), and thousand/decimal separators.
 
-FormatMoney supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatMoneyInt, FormatMoneyBigRat, or FormatMoneyFloat64.
+FormatMoney supports various types of value by runtime reflection. If you don't need runtime type evaluation, please refer to FormatMoneyInt, FormatMoneyBigRat, FormatMoneyBigRat, or FormatMoneyFloat64.
 
 * supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat
 
@@ -112,6 +117,33 @@ ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
 fmt.Println(ac.FormatMoney(1000000)) // "GBP 1,000,000"
 fmt.Println(ac.FormatMoney(-5000))   // "GBP (5,000)"
 fmt.Println(ac.FormatMoney(0))       // "GBP --"
+```
+
+## FormatMoneyBigFloat(value *big.Float) string
+
+** (>= Go 1.5) **
+
+FormatMoneyBigFloat only supports [*big.Float](https://golang.org/pkg/math/big/#Float) value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
+
+**Examples:**
+
+```Go
+ac = accounting.Accounting{Symbol: "$", Precision: 2}
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(123456789.213123))) // "$123,456,789.21"
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(12345678)))         // "$12,345,678.00"
+
+ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(4999.99)))  // "€4.999,99"
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(-4999.99))) // "€-4.999,99"
+
+ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(-500000))) // "£ -500,000"
+
+ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
+    Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(1000000))) // "GBP 1,000,000"
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(-5000)))   // "GBP (5,000)"
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(0)))       // "GBP --"
 ```
 
 ## FormatMoneyInt(value int) string
@@ -166,8 +198,6 @@ fmt.Println(ac.FormatMoneyBigRat(big.NewRat(0, 3)))         // "GBP --"
 
 ## FormatMoneyFloat64(value float64) string
 
-**Caution: Please do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) is highly recommended.**
-
 FormatMoneyFloat64 only supports float64 value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
 **Examples:**
@@ -204,6 +234,18 @@ FormatNumber supports various types of value by runtime reflection. If you don't
 ```Go
 fmt.Println(accounting.FormatNumber(123456789.213123, 3, ",", ".")) // "123,456,789.213"
 fmt.Println(accounting.FormatNumber(1000000, 3, " ", ","))          // "1 000 000,000"
+```
+
+## FormatNumberBigFloat(value *big.Float, precision int, thousand string, decimal string) string
+
+** (>= Go 1.5) **
+
+FormatNumberBigFloat only supports [*big.Float](https://golang.org/pkg/math/big/#Float) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
+
+**Examples:**
+
+```Go
+fmt.Println(accounting.FormatNumberBigFloat(big.NewFloat(123456789.213123), 3, ",", ".")) // "123,456,789.213"
 ```
 
 ## FormatNumberInt(value int, precision int, thousand string, decimal string) string
