@@ -52,6 +52,9 @@ func main() {
 Please do not use float64 to count money. Floats can have errors when you perform operations on them. Using [big.Rat](https://golang.org/pkg/math/big/#Rat) (< Go 1.5) or [big.Float](https://golang.org/pkg/math/big/#Float) (>= Go 1.5) is highly recommended.
 (accounting supports float64, but it is just for convenience.)
 
+* [FormatMoneyBigFloat(value *big.Float) string](#formatmoneybigfloatvalue-bigfloat-string)
+* [FormatMoneyBigRat(value *big.Rat) string](#formatmoneybigratvalue-bigrat-string)
+
 ## Initialization
 
 ### Accounting struct
