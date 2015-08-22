@@ -63,7 +63,7 @@ type Accounting struct {
     Decimal        string // decimal separator (optional / default: .)
     Format         string // simple format string allows control of symbol position (%v = value, %s = symbol) (default: %s%v)
     FormatNegative string // format string for negative values (optional / default: strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1))
-    FormatZero     string // format string for zero values (optional / default: %s0)
+    FormatZero     string // format string for zero values (optional / default: Format)
 }
 ```
 
@@ -75,7 +75,7 @@ Thousand       | string | thousand separator | , | .
 Decimal        | string | decimal separator | . | ,
 Format         | string | simple format string allows control of symbol position (%v = value, %s = symbol) | %s%v | %s %v
 FormatNegative | string | format string for negative values | strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1)) | %s (%v)
-FormatZero     | string | format string for zero values | strings.Replace(accounting.Format, "%v", "0", -1) | %s --
+FormatZero     | string | format string for zero values | Format | %s --
 
 **Examples:**
 
@@ -121,7 +121,7 @@ fmt.Println(ac.FormatMoney(0))       // "GBP --"
 
 ## FormatMoneyBigFloat(value *big.Float) string
 
-** (>= Go 1.5) **
+**(>= Go 1.5)**
 
 FormatMoneyBigFloat only supports [*big.Float](https://golang.org/pkg/math/big/#Float) value. It is faster than FormatMoney, because it does not do any runtime type evaluation.
 
@@ -238,7 +238,7 @@ fmt.Println(accounting.FormatNumber(1000000, 3, " ", ","))          // "1 000 00
 
 ## FormatNumberBigFloat(value *big.Float, precision int, thousand string, decimal string) string
 
-** (>= Go 1.5) **
+**(>= Go 1.5)**
 
 FormatNumberBigFloat only supports [*big.Float](https://golang.org/pkg/math/big/#Float) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
 

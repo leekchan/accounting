@@ -12,7 +12,7 @@ type Accounting struct {
 	Decimal        string // decimal separator (optional / default: .)
 	Format         string // simple format string allows control of symbol position (%v = value, %s = symbol) (default: %s%v)
 	FormatNegative string // format string for negative values (optional / default: strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1))
-	FormatZero     string // format string for zero values (optional / default: strings.Replace(accounting.Format, "%v", "0", -1))
+	FormatZero     string // format string for zero values (optional / default: Format)
 }
 
 func (accounting *Accounting) init() {
@@ -33,17 +33,22 @@ func (accounting *Accounting) init() {
 	}
 
 	if accounting.FormatZero == "" {
-		accounting.FormatZero = strings.Replace(accounting.Format, "%v", "0", -1)
+		accounting.FormatZero = accounting.Format
 	}
 }
 
 func (accounting *Accounting) formatMoneyString(formattedNumber string) string {
 	var format string
 
+	zero := "0"
+	if accounting.Precision > 0 {
+		zero += "." + strings.Repeat("0", accounting.Precision)
+	}
+
 	if formattedNumber[0] == '-' {
 		format = accounting.FormatNegative
 		formattedNumber = formattedNumber[1:]
-	} else if formattedNumber == "0" {
+	} else if formattedNumber == zero {
 		format = accounting.FormatZero
 	} else {
 		format = accounting.Format
