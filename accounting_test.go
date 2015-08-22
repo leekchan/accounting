@@ -3,12 +3,18 @@ package accounting
 import (
 	"math/big"
 	"testing"
+	"runtime"
+	"fmt"
 )
 
 func AssertEqual(t *testing.T, x, y string) {
 	if x != y {
 		t.Error("Expected ", y, ", got ", x)
 	}
+}
+
+func init() {
+	fmt.Printf("version: %s", runtime.Version())
 }
 
 func TestFormatMoney(t *testing.T) {
