@@ -29,15 +29,14 @@ func main() {
     fmt.Println(ac.FormatMoney(123456789.213123))                       // "$123,456,789.21"
     fmt.Println(ac.FormatMoney(12345678))                               // "$12,345,678.00"
     fmt.Println(ac.FormatMoney(big.NewRat(77777777, 3)))                // "$25,925,925.67"
-    fmt.Println(ac.FormatMoney(big.NewRat(-77777777, 3)))               // "$-25,925,925.67"
+    fmt.Println(ac.FormatMoney(big.NewRat(-77777777, 3)))               // "-$25,925,925.67"
     fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(123456789.213123))) // "$123,456,789.21"
 
     ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
     fmt.Println(ac.FormatMoney(4999.99))  // "€4.999,99"
-    fmt.Println(ac.FormatMoney(-4999.99)) // "€-4.999,99"
 
     ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
-    fmt.Println(ac.FormatMoney(-500000)) // "£ -500,000"
+    fmt.Println(ac.FormatMoney(500000)) // "£ 500,000"
 
     ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
         Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
@@ -107,14 +106,13 @@ ac := accounting.Accounting{Symbol: "$", Precision: 2}
 fmt.Println(ac.FormatMoney(123456789.213123))         // "$123,456,789.21"
 fmt.Println(ac.FormatMoney(12345678))                 // "$12,345,678.00"
 fmt.Println(ac.FormatMoney(big.NewRat(77777777, 3)))  // "$25,925,925.67"
-fmt.Println(ac.FormatMoney(big.NewRat(-77777777, 3))) // "$-25,925,925.67"
+fmt.Println(ac.FormatMoney(big.NewRat(-77777777, 3))) // "-$25,925,925.67"
 
 ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 fmt.Println(ac.FormatMoney(4999.99))  // "€4.999,99"
-fmt.Println(ac.FormatMoney(-4999.99)) // "€-4.999,99"
 
 ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
-fmt.Println(ac.FormatMoney(-500000)) // "£ -500,000"
+fmt.Println(ac.FormatMoney(500000)) // "£ 500,000"
 
 ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
     Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
@@ -138,10 +136,9 @@ fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(12345678)))         // "$12,345,
 
 ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(4999.99)))  // "€4.999,99"
-fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(-4999.99))) // "€-4.999,99"
 
 ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
-fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(-500000))) // "£ -500,000"
+fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(500000))) // "£ 500,000"
 
 ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
     Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
@@ -162,10 +159,9 @@ fmt.Println(ac.FormatMoneyInt(12345678)) // "$12,345,678.00"
 
 ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 fmt.Println(ac.FormatMoneyInt(4999))  // "€4.999,00"
-fmt.Println(ac.FormatMoneyInt(-4999)) // "€-4.999,00"
 
 ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
-fmt.Println(ac.FormatMoneyInt(-500000)) // "£ -500,000"
+fmt.Println(ac.FormatMoneyInt(500000)) // "£ 500,000"
 
 ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
     Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
@@ -183,15 +179,13 @@ FormatMoneyBigRat only supports [*big.Rat](https://golang.org/pkg/math/big/#Rat)
 ```Go
 ac = accounting.Accounting{Symbol: "$", Precision: 2}
 fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "$25,925,925.67"
-fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "$-25,925,925.67"
+fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "-$25,925,925.67"
 
 ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "€25.925.925,67"
-fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "€-25.925.925,67"
 
 ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
 fmt.Println(ac.FormatMoneyBigRat(big.NewRat(77777777, 3)))  // "£ 25,925,926"
-fmt.Println(ac.FormatMoneyBigRat(big.NewRat(-77777777, 3))) // "£ -25,925,926"
 
 ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
     Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
@@ -213,10 +207,9 @@ fmt.Println(ac.FormatMoneyFloat64(12345678))         // "$12,345,678.00"
 
 ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 fmt.Println(ac.FormatMoneyFloat64(4999.99))  // "€4.999,99"
-fmt.Println(ac.FormatMoneyFloat64(-4999.99)) // "€-4.999,99"
 
 ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
-fmt.Println(ac.FormatMoneyFloat64(-500000)) // "£ -500,000"
+fmt.Println(ac.FormatMoneyFloat64(500000)) // "£ 500,000"
 
 ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
     Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
