@@ -13,10 +13,9 @@ func TestFormatMoneyBigFloat(t *testing.T) {
 
 	accounting = Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 	AssertEqual(t, accounting.FormatMoneyBigFloat(big.NewFloat(4999.99)), "€4.999,99")
-	AssertEqual(t, accounting.FormatMoneyBigFloat(big.NewFloat(-4999.99)), "€-4.999,99")
 
 	accounting = Accounting{Symbol: "£ ", Precision: 0}
-	AssertEqual(t, accounting.FormatMoneyBigFloat(big.NewFloat(-500000.0)), "£ -500,000")
+	AssertEqual(t, accounting.FormatMoneyBigFloat(big.NewFloat(500000.0)), "£ 500,000")
 
 	accounting = Accounting{Symbol: "GBP", Precision: 0,
 		Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}

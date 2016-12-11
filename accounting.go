@@ -29,7 +29,7 @@ func (accounting *Accounting) init() {
 	}
 
 	if accounting.FormatNegative == "" {
-		accounting.FormatNegative = strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1)
+		accounting.FormatNegative = "-" + accounting.Format
 	}
 
 	if accounting.FormatZero == "" {
