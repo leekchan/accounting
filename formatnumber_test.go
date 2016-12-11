@@ -1,7 +1,6 @@
 package accounting
 
 import (
-	"math"
 	"math/big"
 	"testing"
 )
@@ -14,8 +13,6 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(-123.123123, 5, ",", "."), "-123.12312")
 	AssertEqual(t, FormatNumber(-12.123123, 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumber(-1.123123, 5, ",", "."), "-1.12312")
-	AssertEqual(t, FormatNumber(math.MaxInt64, 10, ",", "."), "9,223,372,036,854,775,807.0000000000")
-	AssertEqual(t, FormatNumber(math.MinInt64, 10, ",", "."), "-9,223,372,036,854,775,808.0000000000")
 	AssertEqual(t, FormatNumber(-1, 3, ",", "."), "-1.000")
 	AssertEqual(t, FormatNumber(-10, 3, ",", "."), "-10.000")
 	AssertEqual(t, FormatNumber(-100, 3, ",", "."), "-100.000")
@@ -54,9 +51,6 @@ func TestFormatNumber(t *testing.T) {
 }
 
 func TestFormatNumberInt(t *testing.T) {
-	AssertEqual(t, FormatNumberInt(math.MaxInt64, 10, ",", "."), "9,223,372,036,854,775,807.0000000000")
-	AssertEqual(t, FormatNumberInt(math.MinInt64+1, 10, ",", "."), "-9,223,372,036,854,775,807.0000000000")
-	AssertEqual(t, FormatNumberInt(math.MinInt64, 10, ",", "."), "-9,223,372,036,854,775,808.0000000000")
 	AssertEqual(t, FormatNumberInt(-1, 3, ",", "."), "-1.000")
 	AssertEqual(t, FormatNumberInt(-10, 3, ",", "."), "-10.000")
 	AssertEqual(t, FormatNumberInt(-100, 3, ",", "."), "-100.000")

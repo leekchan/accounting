@@ -3,6 +3,13 @@ go:
   - 1.4.2
   - 1.5
   - tip
+env:
+  global:
+    - BUILD_GOARCH=amd64
+  matrix:
+    - BUILD_GOOS=linux
+    - BUILD_GOOS=darwin
+    - BUILD_GOOS=windows
 before_install:
   - go get github.com/axw/gocov/gocov
   - go get github.com/mattn/goveralls

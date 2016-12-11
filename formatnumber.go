@@ -3,7 +3,6 @@ package accounting
 import (
 	"bytes"
 	"fmt"
-	"math"
 	"math/big"
 	"reflect"
 	"strings"
@@ -87,11 +86,11 @@ func FormatNumberInt(x int, precision int, thousand string, decimal string) stri
 	var result string
 	var minus bool
 
-	if x == math.MinInt64 {
-		return FormatNumber(x, precision, thousand, decimal)
-	}
-
 	if x < 0 {
+		if x*-1 < 0 {
+			return FormatNumber(x, precision, thousand, decimal)
+		}
+
 		minus = true
 		x *= -1
 	}
