@@ -3,6 +3,8 @@ package accounting
 import (
 	"math/big"
 	"strings"
+
+	"github.com/cockroachdb/apd"
 )
 
 type Accounting struct {
@@ -95,5 +97,13 @@ func (accounting *Accounting) FormatMoneyFloat64(value float64) string {
 func (accounting *Accounting) FormatMoneyBigRat(value *big.Rat) string {
 	accounting.init()
 	formattedNumber := FormatNumberBigRat(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
+	return accounting.formatMoneyString(formattedNumber)
+}
+
+// FormatMoneyBigDecimal only supports *big.Rat value. It is faster than FormatMoney,
+// because it does not do any runtime type evaluation.
+func (accounting *Accounting) FormatMoneyBigDecimal(value *apd.Decimal) string {
+	accounting.init()
+	formattedNumber := FormatNumberBigDecimal(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
