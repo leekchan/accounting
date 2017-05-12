@@ -100,7 +100,7 @@ func (accounting *Accounting) FormatMoneyBigRat(value *big.Rat) string {
 	return accounting.formatMoneyString(formattedNumber)
 }
 
-// FormatMoneyBigDecimal only supports *big.Rat value. It is faster than FormatMoney,
+// FormatMoneyBigDecimal only supports *apd.Decimal value. It is faster than FormatMoney,
 // because it does not do any runtime type evaluation.
 func (accounting *Accounting) FormatMoneyBigDecimal(value *apd.Decimal) string {
 	accounting.init()
