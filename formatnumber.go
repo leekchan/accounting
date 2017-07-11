@@ -6,6 +6,8 @@ import (
 	"math/big"
 	"reflect"
 	"strings"
+
+	"github.com/cockroachdb/apd"
 )
 
 func formatNumberString(x string, precision int, thousand string, decimal string) string {
@@ -70,6 +72,11 @@ func FormatNumber(value interface{}, precision int, thousand string, decimal str
 		switch v.Type().String() {
 		case "*big.Rat":
 			x = value.(*big.Rat).FloatString(precision)
+		case "*apd.Decimal":
+			v := value.(*apd.Decimal)
+			d := apd.New(0, 0)
+			apd.BaseContext.WithPrecision(uint32(v.NumDigits())+uint32(precision)).Quantize(d, v, int32(-precision))
+			x = d.Text('f')
 		default:
 			panic("Unsupported type - " + v.Type().String())
 		}
@@ -122,4 +129,12 @@ func FormatNumberFloat64(x float64, precision int, thousand string, decimal stri
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
 func FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string {
 	return formatNumberString(x.FloatString(precision), precision, thousand, decimal)
+}
+
+// FormatNumberBigDecimal only supports *apd.Decimal value.
+// It is faster than FormatNumber, because it does not do any runtime type evaluation.
+func FormatNumberBigDecimal(x *apd.Decimal, precision int, thousand string, decimal string) string {
+	d := apd.New(0, 0)
+	apd.BaseContext.WithPrecision(uint32(x.NumDigits())+uint32(precision)).Quantize(d, x, int32(-precision))
+	return formatNumberString(d.Text('f'), precision, thousand, decimal)
 }
