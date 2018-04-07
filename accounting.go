@@ -16,6 +16,32 @@ type Accounting struct {
 	Format         string // simple format string allows control of symbol position (%v = value, %s = symbol) (default: %s%v)
 	FormatNegative string // format string for negative values (optional / default: strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1))
 	FormatZero     string // format string for zero values (optional / default: Format)
+	isInitialized bool // is set to true if used via DefaultAccounting or NewAccounting
+}
+
+
+// DefaultAccounting returns the Accounting with default settings
+func DefaultAccounting(symbol string, precision int) *Accounting {
+	ac := &Accounting{Symbol:symbol,Precision:precision}
+	ac.init()
+	ac.isInitialized = true
+	return ac
+}
+
+
+// NewAccounting returns the Accounting with default settings
+func NewAccounting(symbol string, precision int, thousand, decimal, format, formatNegative, formatZero string) *Accounting {
+	ac := &Accounting{
+		Symbol: symbol,
+		Precision: precision,
+		Thousand: thousand,
+		Decimal: decimal,
+		Format: format,
+		FormatNegative: formatNegative,
+		FormatZero: formatZero,
+	}
+	ac.isInitialized = true
+	return ac
 }
 
 func (accounting *Accounting) init() {
@@ -69,7 +95,9 @@ func (accounting *Accounting) formatMoneyString(formattedNumber string) string {
 // If you don't need runtime type evaluation, please refer to FormatMoneyInt or FormatMoneyFloat64.
 // (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat)
 func (accounting *Accounting) FormatMoney(value interface{}) string {
-	accounting.init()
+	if !accounting.isInitialized {
+		accounting.init()
+	}
 	formattedNumber := FormatNumber(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
@@ -77,7 +105,9 @@ func (accounting *Accounting) FormatMoney(value interface{}) string {
 // FormatMoneyInt only supports int type value. It is faster than FormatMoney,
 // because it does not do any runtime type evaluation.
 func (accounting *Accounting) FormatMoneyInt(value int) string {
-	accounting.init()
+	if !accounting.isInitialized {
+		accounting.init()
+	}
 	formattedNumber := FormatNumberInt(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
@@ -88,7 +118,9 @@ func (accounting *Accounting) FormatMoneyInt(value int) string {
 // Floats can have errors when you perform operations on them.
 // Using big.Rat is highly recommended.)
 func (accounting *Accounting) FormatMoneyFloat64(value float64) string {
-	accounting.init()
+	if !accounting.isInitialized {
+		accounting.init()
+	}
 	formattedNumber := FormatNumberFloat64(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
@@ -96,7 +128,9 @@ func (accounting *Accounting) FormatMoneyFloat64(value float64) string {
 // FormatMoneyBigRat only supports *big.Rat value. It is faster than FormatMoney,
 // because it does not do any runtime type evaluation.
 func (accounting *Accounting) FormatMoneyBigRat(value *big.Rat) string {
-	accounting.init()
+	if !accounting.isInitialized {
+		accounting.init()
+	}
 	formattedNumber := FormatNumberBigRat(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
@@ -104,7 +138,9 @@ func (accounting *Accounting) FormatMoneyBigRat(value *big.Rat) string {
 // FormatMoneyBigDecimal only supports *apd.Decimal value. It is faster than FormatMoney,
 // because it does not do any runtime type evaluation.
 func (accounting *Accounting) FormatMoneyBigDecimal(value *apd.Decimal) string {
-	accounting.init()
+	if !accounting.isInitialized {
+		accounting.init()
+	}
 	formattedNumber := FormatNumberBigDecimal(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }

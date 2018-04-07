@@ -20,8 +20,12 @@ func init() {
 	fmt.Printf("version: %s", runtime.Version())
 }
 
+func TestNewAccounting(t *testing.T) {
+
+}
+
 func TestFormatMoney(t *testing.T) {
-	accounting := Accounting{Symbol: "$", Precision: 2}
+	accounting := DefaultAccounting("$", 2)
 	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$123,456,789.21")
 	AssertEqual(t, accounting.FormatMoney(12345678), "$12,345,678.00")
 	AssertEqual(t, accounting.FormatMoney(-12345678), "-$12,345,678.00")
@@ -33,29 +37,29 @@ func TestFormatMoney(t *testing.T) {
 	AssertEqual(t, accounting.FormatMoney(decimal.New(500000, 0)), "$500,000.00")
 	AssertEqual(t, accounting.FormatMoney(decimal.New(500000, 0)), "$500,000.00")
 
-	accounting = Accounting{Symbol: "$", Precision: 0, Format: "%s %v"}
+	accounting = NewAccounting( "$", 0, ",", ".","%s %v","-%s %v","%s %v")
 	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$ 123,456,789")
 	AssertEqual(t, accounting.FormatMoney(12345678), "$ 12,345,678")
 	AssertEqual(t, accounting.FormatMoney(-12345678), "-$ 12,345,678")
 	AssertEqual(t, accounting.FormatMoney(0), "$ 0")
 
-	accounting = Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
-	AssertEqual(t, accounting.FormatMoney(4999.99), "€4.999,99")
+	accounting2 := Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
+	AssertEqual(t, accounting2.FormatMoney(4999.99), "€4.999,99")
 
-	accounting = Accounting{Symbol: "£ ", Precision: 0}
-	AssertEqual(t, accounting.FormatMoney(500000), "£ 500,000")
+	accounting2 = Accounting{Symbol: "£ ", Precision: 0}
+	AssertEqual(t, accounting2.FormatMoney(500000), "£ 500,000")
 
-	accounting = Accounting{Symbol: "GBP", Precision: 0,
+	accounting2 = Accounting{Symbol: "GBP", Precision: 0,
 		Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
-	AssertEqual(t, accounting.FormatMoney(1000000), "GBP 1,000,000")
-	AssertEqual(t, accounting.FormatMoney(-5000), "GBP (5,000)")
-	AssertEqual(t, accounting.FormatMoney(0), "GBP --")
+	AssertEqual(t, accounting2.FormatMoney(1000000), "GBP 1,000,000")
+	AssertEqual(t, accounting2.FormatMoney(-5000), "GBP (5,000)")
+	AssertEqual(t, accounting2.FormatMoney(0), "GBP --")
 
-	accounting = Accounting{Symbol: "GBP", Precision: 2,
+	accounting2 = Accounting{Symbol: "GBP", Precision: 2,
 		Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
-	AssertEqual(t, accounting.FormatMoney(1000000), "GBP 1,000,000.00")
-	AssertEqual(t, accounting.FormatMoney(-5000), "GBP (5,000.00)")
-	AssertEqual(t, accounting.FormatMoney(0), "GBP --")
+	AssertEqual(t, accounting2.FormatMoney(1000000), "GBP 1,000,000.00")
+	AssertEqual(t, accounting2.FormatMoney(-5000), "GBP (5,000.00)")
+	AssertEqual(t, accounting2.FormatMoney(0), "GBP --")
 }
 
 func TestFormatMoneyInt(t *testing.T) {
