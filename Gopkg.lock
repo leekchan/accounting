@@ -13,9 +13,15 @@
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
 
+[[projects]]
+  name = "github.com/shopspring/decimal"
+  packages = ["."]
+  revision = "69b3a8ad1f5f2c8bd855cb6506d18593064a346b"
+  version = "1.0.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f5cdd50b2e889200aae6f53bf153cce544660e0371cb7a66d7f8e2c52d253819"
+  inputs-digest = "b506f0d08b2a599ccfa3d9e18e1ea23891b877fec356b60638f1362d3b4dfa8e"
   solver-name = "gps-cdcl"
   solver-version = 1

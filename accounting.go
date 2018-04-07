@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/apd"
+	"github.com/shopspring/decimal"
 )
 
 type Accounting struct {
@@ -105,5 +106,13 @@ func (accounting *Accounting) FormatMoneyBigRat(value *big.Rat) string {
 func (accounting *Accounting) FormatMoneyBigDecimal(value *apd.Decimal) string {
 	accounting.init()
 	formattedNumber := FormatNumberBigDecimal(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
+	return accounting.formatMoneyString(formattedNumber)
+}
+
+// FormatMoneyDecimal only supports decimal.Decimal value. It is faster than FormatMoney,
+// because it does not do any runtime type evaluation.
+func (accounting *Accounting) FormatMoneyDecimal(value decimal.Decimal) string {
+	accounting.init()
+	formattedNumber := FormatNumberDecimal(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
