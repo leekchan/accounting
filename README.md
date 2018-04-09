@@ -21,6 +21,7 @@ import (
     "fmt"
     "math/big"
 
+	"github.com/shopspring/decimal"
     "github.com/leekchan/accounting"
 )
 
@@ -31,6 +32,7 @@ func main() {
     fmt.Println(ac.FormatMoney(big.NewRat(77777777, 3)))                // "$25,925,925.67"
     fmt.Println(ac.FormatMoney(big.NewRat(-77777777, 3)))               // "-$25,925,925.67"
     fmt.Println(ac.FormatMoneyBigFloat(big.NewFloat(123456789.213123))) // "$123,456,789.21"
+    fmt.Println(ac.FormatMoneyDecimal(decimal.New(123456789.213123, 0))) // "$123,456,789.21"
 
     ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
     fmt.Println(ac.FormatMoney(4999.99))  // "€4.999,99"
@@ -40,6 +42,16 @@ func main() {
 
     ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
         Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
+    fmt.Println(ac.FormatMoney(1000000)) // "GBP 1,000,000"
+    fmt.Println(ac.FormatMoney(-5000))   // "GBP (5,000)"
+    fmt.Println(ac.FormatMoney(0))       // "GBP --"
+
+    ac = accounting.DefaultAccounting("GBP", 2)
+    fmt.Println(ac.FormatMoney(1000000)) // "GBP 1,000,000"
+    fmt.Println(ac.FormatMoney(-5000))   // "GBP (5,000)"
+    fmt.Println(ac.FormatMoney(0))       // "GBP --"
+
+    ac = accounting.NewAccounting("GBP", 2, ",", ".", "%s %v", "%s (%v)", "%s --")
     fmt.Println(ac.FormatMoney(1000000)) // "GBP 1,000,000"
     fmt.Println(ac.FormatMoney(-5000))   // "GBP (5,000)"
     fmt.Println(ac.FormatMoney(0))       // "GBP --"
@@ -83,6 +95,11 @@ FormatZero     | string | format string for zero values | Format | %s --
 **Examples:**
 
 ```Go
+# Via functions
+ac := accounting.DefaultAccounting("$", 2)
+ac := accounting.NewAccounting("$", 2, ",", ".", "%s %v", "%s (%v)", "%s --")
+
+# Via Accounting struct
 ac := accounting.Accounting{Symbol: "$", Precision: 2}
 
 ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
@@ -90,6 +107,26 @@ ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: 
 ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
         Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
 ```
+
+## SetThousandSeparator(str string)
+
+SetThousandSeparator sets the separator for the thousands separation
+
+## SetDecimalSeparator(str string)
+
+SetDecimalSeparator sets the separator for the decimal separation
+
+## SetFormat(str string)
+
+SetFormat sets the Format default: `%s%v` (%s=Symbol;%v=Value)
+
+## SetFormatNegative(str string)
+
+SetFormatNegative sets the Format for negative values default: `-%s%v` (%s=Symbol;%v=Value)
+
+## SetFormatZero(str string)
+
+SetFormatZero sets the Format for zero values default: `%s%v` (%s=Symbol;%v=Value)
 
 ## FormatMoney(value interface{}) string
 
@@ -273,4 +310,26 @@ FormatNumberFloat64 only supports float64 value. It is faster than FormatNumber,
 
 ```Go
 fmt.Println(accounting.FormatNumberFloat64(123456789.213123, 3, ",", ".")) // "123,456,789.213"
+```
+
+## FormatNumberDecimal(value decimal.Decimal, precision int, thousand string, decimal string) string
+
+FormatNumberDecimal only supports [decimal.Decimal](https://github.com/shopspring/decimal) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
+
+**Examples:**
+
+```Go
+import "github.com/shopspring/decimal"
+fmt.Println(accounting.FormatNumberBigDecimal(apd.New(apd.New(4999999, -3), 3, ",", ".")) // "4,999.999"
+```
+
+## FormatNumberBigDecimal(value apd.Decimal, precision int, thousand string, decimal string) string
+
+FormatNumberDecimal only supports [apd.Decimal](https://github.com/cockroachdb/apd) value. It is faster than FormatNumber, because it does not do any runtime type evaluation.
+
+**Examples:**
+
+```Go
+import "github.com/cockroachdb/apd"
+fmt.Println(accounting.FormatNumberDecimal(decimal.New(123456789.213123,3), 3, ",", ".")) // "123,456,789.213"
 ```

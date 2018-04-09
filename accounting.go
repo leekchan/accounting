@@ -44,6 +44,31 @@ func NewAccounting(symbol string, precision int, thousand, decimal, format, form
 	return ac
 }
 
+// SetThousandSeparator sets the separator for the thousands separation
+func (accounting *Accounting) SetThousandSeparator(str string) {
+	accounting.Thousand = str
+}
+
+// SetDecimalSeparator sets the separator for the decimal separation
+func (accounting *Accounting) SetDecimalSeparator(str string) {
+	accounting.Decimal = str
+}
+
+// SetFormat sets the Format default: %s%v (%s=Symbol;%v=Value)
+func (accounting *Accounting) SetFormat(str string) {
+	accounting.Format = str
+}
+
+// SetFormatNegative sets the Format for negative values default: -%s%v (%s=Symbol;%v=Value)
+func (accounting *Accounting) SetFormatNegative(str string) {
+	accounting.FormatNegative = str
+}
+
+// SetFormatZero sets the Format for zero values default: %s%v (%s=Symbol;%v=Value)
+func (accounting *Accounting) SetFormatZero(str string) {
+	accounting.FormatZero = str
+}
+
 func (accounting *Accounting) init() {
 	if accounting.Thousand == "" {
 		accounting.Thousand = ","

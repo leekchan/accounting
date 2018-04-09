@@ -29,10 +29,10 @@
   name = "github.com/cockroachdb/apd"
   version = "1.0.0"
 
-[prune]
-  go-tests = true
-  unused-packages = true
-
 [[constraint]]
   name = "github.com/shopspring/decimal"
   version = "1.0.1"
+
+[prune]
+  go-tests = true
+  unused-packages = true
