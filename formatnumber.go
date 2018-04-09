@@ -8,9 +8,10 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/apd"
+	"github.com/shopspring/decimal"
 )
 
-func formatNumberString(x string, precision int, thousand string, decimal string) string {
+func formatNumberString(x string, precision int, thousand string, decimalStr string) string {
 	lastIndex := strings.Index(x, ".") - 1
 
 	if lastIndex < 0 {
@@ -41,8 +42,8 @@ func formatNumberString(x string, precision int, thousand string, decimal string
 	}
 
 	extra := x[lastIndex+1:]
-	if decimal != "." {
-		extra = strings.Replace(extra, ".", decimal, 1)
+	if decimalStr != "." {
+		extra = strings.Replace(extra, ".", decimalStr, 1)
 	}
 
 	return result + extra
@@ -52,7 +53,8 @@ func formatNumberString(x string, precision int, thousand string, decimal string
 // FormatNumber supports various types of value by runtime reflection.
 // If you don't need runtime type evaluation, please refer to FormatNumberInt or FormatNumberFloat64.
 // (supported value types : int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *big.Rat)
-func FormatNumber(value interface{}, precision int, thousand string, decimal string) string {
+// (also supported value types : decimal.Decimal, *decimal.Decimal *apd.Decimal)
+func FormatNumber(value interface{}, precision int, thousand string, decimalStr string) string {
 	v := reflect.ValueOf(value)
 	var x string
 	switch v.Kind() {
@@ -68,6 +70,13 @@ func FormatNumber(value interface{}, precision int, thousand string, decimal str
 		}
 	case reflect.Float32, reflect.Float64:
 		x = fmt.Sprintf(fmt.Sprintf("%%.%df", precision), v.Float())
+	case reflect.Struct:
+		switch v.Type().String() {
+		case "decimal.Decimal":
+			x = value.(decimal.Decimal).StringFixed(int32(precision))
+		default:
+			panic("Unsupported type - " + v.Type().String() + " - kind " + v.Kind().String())
+		}
 	case reflect.Ptr:
 		switch v.Type().String() {
 		case "*big.Rat":
@@ -75,27 +84,29 @@ func FormatNumber(value interface{}, precision int, thousand string, decimal str
 		case "*apd.Decimal":
 			v := value.(*apd.Decimal)
 			d := apd.New(0, 0)
-			apd.BaseContext.WithPrecision(uint32(v.NumDigits())+uint32(precision)).Quantize(d, v, int32(-precision))
+			apd.BaseContext.WithPrecision(uint32(v.NumDigits()) + uint32(precision)).Quantize(d, v, int32(-precision))
 			x = d.Text('f')
+		case "*decimal.Decimal":
+			x = value.(*decimal.Decimal).StringFixed(int32(precision))
 		default:
-			panic("Unsupported type - " + v.Type().String())
+			panic("Unsupported type - " + v.Type().String() + " - kind " + v.Kind().String())
 		}
 	default:
-		panic("Unsupported type - " + v.Kind().String())
+		panic("Unsupported type - " + v.Type().String() + " - kind " + v.Kind().String())
 	}
 
-	return formatNumberString(x, precision, thousand, decimal)
+	return formatNumberString(x, precision, thousand, decimalStr)
 }
 
 // FormatNumberInt only supports int value. It is faster than FormatNumber,
 // because it does not do any runtime type evaluation.
-func FormatNumberInt(x int, precision int, thousand string, decimal string) string {
+func FormatNumberInt(x int, precision int, thousand string, decimalStr string) string {
 	var result string
 	var minus bool
 
 	if x < 0 {
-		if x*-1 < 0 {
-			return FormatNumber(x, precision, thousand, decimal)
+		if x * -1 < 0 {
+			return FormatNumber(x, precision, thousand, decimalStr)
 		}
 
 		minus = true
@@ -113,7 +124,7 @@ func FormatNumberInt(x int, precision int, thousand string, decimal string) stri
 	}
 
 	if precision > 0 {
-		result += decimal + strings.Repeat("0", precision)
+		result += decimalStr + strings.Repeat("0", precision)
 	}
 
 	return result
@@ -121,20 +132,26 @@ func FormatNumberInt(x int, precision int, thousand string, decimal string) stri
 
 // FormatNumberFloat64 only supports float64 value.
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
-func FormatNumberFloat64(x float64, precision int, thousand string, decimal string) string {
-	return formatNumberString(fmt.Sprintf(fmt.Sprintf("%%.%df", precision), x), precision, thousand, decimal)
+func FormatNumberFloat64(x float64, precision int, thousand string, decimalStr string) string {
+	return formatNumberString(fmt.Sprintf(fmt.Sprintf("%%.%df", precision), x), precision, thousand, decimalStr)
 }
 
 // FormatNumberBigRat only supports *big.Rat value.
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
-func FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimal string) string {
-	return formatNumberString(x.FloatString(precision), precision, thousand, decimal)
+func FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimalStr string) string {
+	return formatNumberString(x.FloatString(precision), precision, thousand, decimalStr)
 }
 
 // FormatNumberBigDecimal only supports *apd.Decimal value.
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
-func FormatNumberBigDecimal(x *apd.Decimal, precision int, thousand string, decimal string) string {
+func FormatNumberBigDecimal(x *apd.Decimal, precision int, thousand string, decimalStr string) string {
 	d := apd.New(0, 0)
-	apd.BaseContext.WithPrecision(uint32(x.NumDigits())+uint32(precision)).Quantize(d, x, int32(-precision))
-	return formatNumberString(d.Text('f'), precision, thousand, decimal)
+	apd.BaseContext.WithPrecision(uint32(x.NumDigits()) + uint32(precision)).Quantize(d, x, int32(-precision))
+	return formatNumberString(d.Text('f'), precision, thousand, decimalStr)
+}
+
+// FormatNumberDecimal only supports decimal.Decimal value.
+// It is faster than FormatNumber, because it does not do any runtime type evaluation.
+func FormatNumberDecimal(x decimal.Decimal, precision int, thousand string, decimalStr string) string {
+	return formatNumberString(x.StringFixed(int32(precision)), precision, thousand, decimalStr)
 }

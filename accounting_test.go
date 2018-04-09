@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/cockroachdb/apd"
+	"github.com/shopspring/decimal"
 )
 
 func AssertEqual(t *testing.T, x, y string) {
@@ -29,6 +30,8 @@ func TestFormatMoney(t *testing.T) {
 	AssertEqual(t, accounting.FormatMoney(big.NewRat(-77777777, 3)), "-$25,925,925.67")
 	AssertEqual(t, accounting.FormatMoney(apd.New(499999, -2)), "$4,999.99")
 	AssertEqual(t, accounting.FormatMoney(apd.New(500000, 0)), "$500,000.00")
+	AssertEqual(t, accounting.FormatMoney(decimal.New(500000, 0)), "$500,000.00")
+	AssertEqual(t, accounting.FormatMoney(decimal.New(500000, 0)), "$500,000.00")
 
 	accounting = Accounting{Symbol: "$", Precision: 0, Format: "%s %v"}
 	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$ 123,456,789")
@@ -122,4 +125,21 @@ func TestFormatMoneyBigDecimal(t *testing.T) {
 	AssertEqual(t, accounting.FormatMoneyBigDecimal(apd.New(1000000, 0)), "GBP 1,000,000")
 	AssertEqual(t, accounting.FormatMoneyBigDecimal(apd.New(-5000, 0)), "GBP (5,000)")
 	AssertEqual(t, accounting.FormatMoneyBigDecimal(apd.New(0, 0)), "GBP --")
+}
+
+func TestFormatMoneyDecimal(t *testing.T) {
+	accounting := Accounting{Symbol: "$", Precision: 2}
+	AssertEqual(t, accounting.FormatMoneyDecimal(decimal.New(123456789213123, -6)), "$123,456,789.21")
+
+	accounting = Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
+	AssertEqual(t, accounting.FormatMoneyDecimal(decimal.New(499999, -2)), "€4.999,99")
+
+	accounting = Accounting{Symbol: "£ ", Precision: 0}
+	AssertEqual(t, accounting.FormatMoneyDecimal(decimal.New(500000, 0)), "£ 500,000")
+
+	accounting = Accounting{Symbol: "GBP", Precision: 0,
+		Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
+	AssertEqual(t, accounting.FormatMoneyDecimal(decimal.New(1000000, 0)), "GBP 1,000,000")
+	AssertEqual(t, accounting.FormatMoneyDecimal(decimal.New(-5000, 0)), "GBP (5,000)")
+	AssertEqual(t, accounting.FormatMoneyDecimal(decimal.New(0, 0)), "GBP --")
 }
