@@ -20,10 +20,6 @@ func init() {
 	fmt.Printf("version: %s", runtime.Version())
 }
 
-func TestNewAccounting(t *testing.T) {
-
-}
-
 func TestFormatMoney(t *testing.T) {
 	accounting := DefaultAccounting("$", 2)
 	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$123,456,789.21")
