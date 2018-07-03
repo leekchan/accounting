@@ -21,7 +21,7 @@ import (
     "fmt"
     "math/big"
 
-	"github.com/shopspring/decimal"
+    "github.com/shopspring/decimal"
     "github.com/leekchan/accounting"
 )
 
