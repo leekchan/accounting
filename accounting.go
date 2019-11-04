@@ -94,15 +94,12 @@ func (accounting *Accounting) init() {
 func (accounting *Accounting) formatMoneyString(formattedNumber string) string {
 	var format string
 
-	zero := "0"
-	if accounting.Precision > 0 {
-		zero += "." + strings.Repeat("0", accounting.Precision)
-	}
+	formattedZero := FormatNumber(0, accounting.Precision, accounting.Thousand, accounting.Decimal)
 
 	if formattedNumber[0] == '-' {
 		format = accounting.FormatNegative
 		formattedNumber = formattedNumber[1:]
-	} else if formattedNumber == zero {
+	} else if formattedNumber == formattedZero {
 		format = accounting.FormatZero
 	} else {
 		format = accounting.Format
