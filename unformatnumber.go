@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
 // UnformatNumber takes a string of the number to strip currency info on
@@ -12,6 +14,8 @@ import (
 // based on thous sep and decimal sep
 func UnformatNumber(n string, precision int, currency string) string {
 	var lc Locale
+	currency = strings.ToUpper(currency)
+
 	if val, ok := LocaleInfo[currency]; ok {
 		lc = val
 	} else {
@@ -25,10 +29,18 @@ func UnformatNumber(n string, precision int, currency string) string {
 	r = regexp.MustCompile(fmt.Sprintf("\\%v", lc.ThouSep)) // Strip out thousands seperator, whatever it is
 	num = r.ReplaceAllString(num, "${1}")
 
-	// Replace decimal seperator with a decimal if its not already
+	// Replace decimal seperator with a decimal at specified precision
 	if lc.DecSep != "." {
 		r = regexp.MustCompile(`\,`)
 		num = r.ReplaceAllString(num, ".")
 	}
+
+	num = setPrecision(num, precision)
 	return num
+}
+
+func setPrecision(num string, precision int) string {
+	p := fmt.Sprintf("%%.%vf", precision)
+	v, _ := strconv.ParseFloat(num, 64)
+	return fmt.Sprintf(p, v)
 }
