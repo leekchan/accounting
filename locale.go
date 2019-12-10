@@ -66,7 +66,7 @@ var LocaleInfo map[string]Locale = map[string]Locale{
 	"ERN": Locale{"Nakfa", 0, empty, empty, "", empty, empty, empty, true},
 	"ESP": Locale{"Spanish Peseta", 0, ".", "", " ", "20A7", "&#x20A7;", "Ptas", false},
 	"ETB": Locale{"Ethiopian Birr", 0, empty, empty, "", empty, empty, empty, true},
-	"EUR": Locale{"Euro", 2, ".", ",", "", "20AC", "&#x20AC;", "EUR", true},
+	"EUR": Locale{"Euro", 2, ".", ",", "", "20AC", "&#x20AC;", "€", true},
 	"FIM": Locale{"Markka", 2, " ", ",", " ", empty, empty, "mk", false},
 	"FJD": Locale{"Fiji Dollar", 0, empty, empty, "", "0024", "&#x0024;", empty, true},
 	"FKP": Locale{"Pound", 0, empty, empty, "", "00A3", "&#x00A3;", empty, true},
