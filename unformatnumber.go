@@ -41,6 +41,10 @@ func UnformatNumber(n string, precision int, currency string) string {
 
 func setPrecision(num string, precision int) string {
 	p := fmt.Sprintf("%%.%vf", precision)
-	v, _ := strconv.ParseFloat(num, 64)
+	num = strings.Trim(num, " ")
+	v, err := strconv.ParseFloat(num, 64)
+	if err != nil {
+		fmt.Println("Err", err)
+	}
 	return fmt.Sprintf(p, v)
 }
