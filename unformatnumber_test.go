@@ -10,4 +10,11 @@ func TestUnformatNumberCommaDecimal(t *testing.T) {
 
 func TestUnformatNumberDecimalComma(t *testing.T) {
 	AssertEqual(t, UnformatNumber("EUR 45.000,33", 2, "eur"), "45000.33")
+
+	func() {
+		defer func() {
+			recover()
+		}()
+		UnformatNumber("$45,567.10", 2, "zzz")
+	}()
 }

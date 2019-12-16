@@ -2,7 +2,6 @@ package accounting
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -19,8 +18,7 @@ func UnformatNumber(n string, precision int, currency string) string {
 	if val, ok := LocaleInfo[currency]; ok {
 		lc = val
 	} else {
-		fmt.Println("No Locale Info Found")
-		os.Exit(1)
+		panic("No Locale Info Found")
 	}
 
 	r := regexp.MustCompile(`[^0-9-., ]`) // Remove anything thats not a space, comma, or decimal
@@ -42,9 +40,6 @@ func UnformatNumber(n string, precision int, currency string) string {
 func setPrecision(num string, precision int) string {
 	p := fmt.Sprintf("%%.%vf", precision)
 	num = strings.Trim(num, " ")
-	v, err := strconv.ParseFloat(num, 64)
-	if err != nil {
-		fmt.Println("Err", err)
-	}
+	v, _ := strconv.ParseFloat(num, 64)
 	return fmt.Sprintf(p, v)
 }
