@@ -138,14 +138,14 @@ SetFormatZero sets the Format for zero values default: `%s%v` (%s=Symbol;%v=Valu
 ```Go
 type Locale struct {
     Name           string // currency name
-	FractionLength int    // default decimal length
-	ThouSep        string // thousands seperator
-	DecSep         string // decimal seperator
-	SpaceSep       string // space seperator
-	UTFSymbol      string // UTF symbol
-	HTMLSymbol     string // HTML symbol
-	ComSymbol      string // Common symbol
-	Pre            bool   // symbol before or after currency
+    FractionLength int    // default decimal length
+    ThouSep        string // thousands seperator
+    DecSep         string // decimal seperator
+    SpaceSep       string // space seperator
+    UTFSymbol      string // UTF symbol
+    HTMLSymbol     string // HTML symbol
+    ComSymbol      string // Common symbol
+    Pre            bool   // symbol before or after currency
 }
 ```
 
@@ -183,7 +183,7 @@ fmt.Println(lc.HTMLSymbol) // "&#x0024"
 fmt.Println(lc.ComSymbol) // "$"
 fmt.Println(lc.Pre) // true
 ```
-There are currently 181 curriencies supported in LocaleInfo
+There are currently 181 currencies supported in LocaleInfo
 
 ## FormatMoney(value interface{}) string
 
