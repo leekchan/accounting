@@ -25,3 +25,6 @@ _testmain.go
 
 # Ignore jetbrains
 .idea/
+# ignore vim
+*.swa
+*.swp

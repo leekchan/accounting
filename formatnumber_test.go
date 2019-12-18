@@ -60,7 +60,6 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(d5, 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumber(d6, 5, ",", "."), "-1.12312")
 
-
 	AssertEqual(t, FormatNumber(&d1, 3, ",", "."), "123,456,789.213")
 	AssertEqual(t, FormatNumber(&d2, 5, ",", "."), "-12,345.12312")
 	AssertEqual(t, FormatNumber(&d3, 5, ",", "."), "-1,234.12312")
@@ -87,7 +86,7 @@ func TestFormatNumber(t *testing.T) {
 		defer func() {
 			recover()
 		}()
-		FormatNumber(demo{Value:1}, 3, ",", ".") // panic: Unsupported type - *big.Int
+		FormatNumber(demo{Value: 1}, 3, ",", ".") // panic: Unsupported type - *big.Int
 	}()
 }
 

@@ -37,6 +37,11 @@ func main() {
     ac = accounting.Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
     fmt.Println(ac.FormatMoney(4999.99))  // "€4.999,99"
 
+    // Or retrieve currency info from Locale struct
+    lc := LocaleInfo["USD"]
+    ac = accounting.Accounting{Symbol: lc.ComSymbol, Precision: 2, Thousand: lc.ThouSep, Decimal: lc.DecSep}
+    fmt.Println(ac.FormatMoney(500000)) // "$500,000.00"
+
     ac = accounting.Accounting{Symbol: "£ ", Precision: 0}
     fmt.Println(ac.FormatMoney(500000)) // "£ 500,000"
 
@@ -127,6 +132,58 @@ SetFormatNegative sets the Format for negative values default: `-%s%v` (%s=Symbo
 ## SetFormatZero(str string)
 
 SetFormatZero sets the Format for zero values default: `%s%v` (%s=Symbol;%v=Value)
+
+### Locale struct
+
+```Go
+type Locale struct {
+    Name           string // currency name
+    FractionLength int    // default decimal length
+    ThouSep        string // thousands seperator
+    DecSep         string // decimal seperator
+    SpaceSep       string // space seperator
+    UTFSymbol      string // UTF symbol
+    HTMLSymbol     string // HTML symbol
+    ComSymbol      string // Common symbol
+    Pre            bool   // symbol before or after currency
+}
+```
+
+Field | Type | Description | Default | Example
+ -------------| ------------- | ------------- | ------------- | -------------
+ Name           | string | currency name | no default value | US Dollar 
+ FractionLength | int    | default precision (decimal places) | no default value | 2
+ ThouSep        | string | thousand separator | no default value | ,
+ DecSep         | string | decimal separator | no default value | .
+ SpaceSep       | string | space separator | no default value | " "
+ UTFSymbol      | string | UTF symbol | no default value | "0024" 
+ HTMLSymbol     | string | HTML symbol | no default value | "&#x0024"
+ ComSymbol      | string | Common symbol | no default value | "$"
+ Pre            | bool   | symbol before currency | no default value | true
+
+**Example:**
+
+```Go
+// LocaleInfo map[string]Locale
+
+var lc Locale
+if val, ok := LocaleInfo["USD"]; ok {
+    lc = val
+} else {
+    panic("No Locale Info Found")
+}
+
+fmt.Println(lc.Name) // "US Dollar"
+fmt.Println(lc.FractionLength) // 2
+fmt.Println(lc.ThouSep) // ","
+fmt.Println(lc.DecSep) // "."
+fmt.Println(lc.SpaceSep) // ""
+fmt.Println(lc.UTFSymbol) // "0024"
+fmt.Println(lc.HTMLSymbol) // "&#x0024"
+fmt.Println(lc.ComSymbol) // "$"
+fmt.Println(lc.Pre) // true
+```
+There are currently 181 currencies supported in LocaleInfo
 
 ## FormatMoney(value interface{}) string
 
@@ -333,3 +390,15 @@ FormatNumberDecimal only supports [apd.Decimal](https://github.com/cockroachdb/a
 import "github.com/cockroachdb/apd"
 fmt.Println(accounting.FormatNumberDecimal(decimal.New(123456789.213123,3), 3, ",", ".")) // "123,456,789.213"
 ```
+
+## UnformatNumber(number string, precision int, currency string) string
+
+UnformatNumber is the inverse of FormatNumber. It strips out all currency formatting and returns the number with a point for the decimal seperator. 
+
+**Examples:**
+
+```Go
+fmt.Println(accounting.UnformatNumber("$45,000.50", 2, "USD")) // "45000.50"
+fmt.Println(accounting.UnformatNumber("EUR 12.500,3474", 3, "EUR")) // "12500.347"
+```
+
