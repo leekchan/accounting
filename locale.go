@@ -149,7 +149,7 @@ var LocaleInfo map[string]Locale = map[string]Locale{
 	"QAR": Locale{"Qatari Rial", 0, empty, empty, "", "FDFC", "&#xFDFC;", "﷼ ", true},
 	"RON": Locale{"Leu", 2, ".", ",", " ", empty, empty, "lei", false},
 	"RSD": Locale{"Serbian Dinar", 2, empty, empty, empty, empty, empty, "РСД", false},
-	"RUB": Locale{"Russian Ruble", 2, ".", ",", empty, "0440 0443 0431", "&#x0440;&#x0443;&#x0431;", "₽", true},
+	"RUB": Locale{"Russian Ruble", 2, ".", ",", empty, "0440 0443 0431", "&#x0440;&#x0443;&#x0431;", "₽", false},
 	"RWF": Locale{"Rwanda Franc", 0, empty, empty, "", empty, empty, "RWF ", true},
 	"SAC": Locale{"S. African Rand Commerc.", 0, empty, empty, "", empty, empty, "SAC ", true},
 	"SAR": Locale{"Saudi Riyal", 2, ",", ".", " ", "FDFC", "&#xFDFC;", "﷼", true},
