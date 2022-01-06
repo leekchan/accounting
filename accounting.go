@@ -94,7 +94,7 @@ func (accounting *Accounting) init() {
 func (accounting *Accounting) formatMoneyString(formattedNumber string) string {
 	var format string
 
-	formattedZero := FormatNumber(0, accounting.Precision, accounting.Thousand, accounting.Decimal)
+	formattedZero := FormatNumber(0, accounting.Precision, accounting.Thousand, accounting.Decimal, accounting.Symbol)
 
 	if formattedNumber[0] == '-' {
 		format = accounting.FormatNegative
@@ -107,7 +107,6 @@ func (accounting *Accounting) formatMoneyString(formattedNumber string) string {
 
 	result := strings.Replace(format, "%s", accounting.Symbol, -1)
 	result = strings.Replace(result, "%v", formattedNumber, -1)
-
 	return result
 }
 
@@ -120,7 +119,8 @@ func (accounting *Accounting) FormatMoney(value interface{}) string {
 	if !accounting.isInitialized {
 		accounting.init()
 	}
-	formattedNumber := FormatNumber(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
+	formattedNumber := FormatNumber(value, accounting.Precision, accounting.Thousand, accounting.Decimal, accounting.Symbol)
+
 	return accounting.formatMoneyString(formattedNumber)
 }
 
