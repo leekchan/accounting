@@ -1,7 +1,5 @@
 package accounting
 
-import ()
-
 type Locale struct {
 	Name           string // currency name
 	FractionLength int    // default decimal length
@@ -86,7 +84,7 @@ var LocaleInfo map[string]Locale = map[string]Locale{
 	"HRK": Locale{"Kuna", 2, ".", ",", " ", empty, empty, "kn", false},
 	"HTG": Locale{"Gourde", 0, empty, empty, "", empty, empty, "G", true},
 	"HUF": Locale{"Forint", 0, ".", "", " ", empty, empty, "Ft", false},
-	"IDR": Locale{"Rupiah", 0, ".", ",", "", empty, empty, "Rp.", true},
+	"IDR": Locale{"Rupiah", 0, ".", ",", "", empty, empty, "Rp", true},
 	"IEP": Locale{"Irish Pound", 2, ",", ".", "", "00A3", "&#x00A3;", "£", true},
 	"ILS": Locale{"New Israeli Sheqel", 2, ",", ".", " ", "20AA", "&#x20AA;", "₪", false},
 	"INR": Locale{"Indian Rupee", 2, ",", ".", "", "20A8", "&#x20A8;", "₹", true},
