@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Ignore jetbrains
+.idea/
+# ignore vim
+*.swa
+*.swp

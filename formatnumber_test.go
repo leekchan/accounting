@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/cockroachdb/apd"
+	"github.com/shopspring/decimal"
 )
 
 func TestFormatNumber(t *testing.T) {
@@ -45,6 +46,27 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(apd.New(-12123123, -6), 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumber(apd.New(-1123123, -6), 5, ",", "."), "-1.12312")
 
+	d1 := decimal.New(123456789213123, -6)
+	d2 := decimal.New(-12345123123, -6)
+	d3 := decimal.New(-1234123123, -6)
+	d4 := decimal.New(-123123123, -6)
+	d5 := decimal.New(-12123123, -6)
+	d6 := decimal.New(-1123123, -6)
+
+	AssertEqual(t, FormatNumber(d1, 3, ",", "."), "123,456,789.213")
+	AssertEqual(t, FormatNumber(d2, 5, ",", "."), "-12,345.12312")
+	AssertEqual(t, FormatNumber(d3, 5, ",", "."), "-1,234.12312")
+	AssertEqual(t, FormatNumber(d4, 5, ",", "."), "-123.12312")
+	AssertEqual(t, FormatNumber(d5, 5, ",", "."), "-12.12312")
+	AssertEqual(t, FormatNumber(d6, 5, ",", "."), "-1.12312")
+
+	AssertEqual(t, FormatNumber(&d1, 3, ",", "."), "123,456,789.213")
+	AssertEqual(t, FormatNumber(&d2, 5, ",", "."), "-12,345.12312")
+	AssertEqual(t, FormatNumber(&d3, 5, ",", "."), "-1,234.12312")
+	AssertEqual(t, FormatNumber(&d4, 5, ",", "."), "-123.12312")
+	AssertEqual(t, FormatNumber(&d5, 5, ",", "."), "-12.12312")
+	AssertEqual(t, FormatNumber(&d6, 5, ",", "."), "-1.12312")
+
 	func() {
 		defer func() {
 			recover()
@@ -56,6 +78,15 @@ func TestFormatNumber(t *testing.T) {
 			recover()
 		}()
 		FormatNumber(big.NewInt(1), 3, ",", ".") // panic: Unsupported type - *big.Int
+	}()
+	func() {
+		type demo struct {
+			Value int
+		}
+		defer func() {
+			recover()
+		}()
+		FormatNumber(demo{Value: 1}, 3, ",", ".") // panic: Unsupported type - *big.Int
 	}()
 }
 
@@ -101,4 +132,13 @@ func TestFormatNumberBigDecimal(t *testing.T) {
 	AssertEqual(t, FormatNumberBigDecimal(apd.New(-123123123, -6), 5, ",", "."), "-123.12312")
 	AssertEqual(t, FormatNumberBigDecimal(apd.New(-12123123, -6), 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumberBigDecimal(apd.New(-1123123, -6), 5, ",", "."), "-1.12312")
+}
+
+func TestFormatNumberDecimal(t *testing.T) {
+	AssertEqual(t, FormatNumberDecimal(decimal.New(123456789213123, -6), 3, ",", "."), "123,456,789.213")
+	AssertEqual(t, FormatNumberDecimal(decimal.New(-12345123123, -6), 5, ",", "."), "-12,345.12312")
+	AssertEqual(t, FormatNumberDecimal(decimal.New(-1234123123, -6), 5, ",", "."), "-1,234.12312")
+	AssertEqual(t, FormatNumberDecimal(decimal.New(-123123123, -6), 5, ",", "."), "-123.12312")
+	AssertEqual(t, FormatNumberDecimal(decimal.New(-12123123, -6), 5, ",", "."), "-12.12312")
+	AssertEqual(t, FormatNumberDecimal(decimal.New(-1123123, -6), 5, ",", "."), "-1.12312")
 }
