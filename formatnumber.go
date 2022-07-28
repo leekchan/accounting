@@ -84,7 +84,7 @@ func FormatNumber(value interface{}, precision int, thousand string, decimalStr 
 		case "*apd.Decimal":
 			v := value.(*apd.Decimal)
 			d := apd.New(0, 0)
-			apd.BaseContext.WithPrecision(uint32(v.NumDigits()) + uint32(precision)).Quantize(d, v, int32(-precision))
+			apd.BaseContext.WithPrecision(uint32(v.NumDigits())+uint32(precision)).Quantize(d, v, int32(-precision))
 			x = d.Text('f')
 		case "*decimal.Decimal":
 			x = value.(*decimal.Decimal).StringFixed(int32(precision))
@@ -105,7 +105,7 @@ func FormatNumberInt(x int, precision int, thousand string, decimalStr string) s
 	var minus bool
 
 	if x < 0 {
-		if x * -1 < 0 {
+		if x*-1 < 0 {
 			return FormatNumber(x, precision, thousand, decimalStr)
 		}
 
@@ -146,7 +146,7 @@ func FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimalStr s
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
 func FormatNumberBigDecimal(x *apd.Decimal, precision int, thousand string, decimalStr string) string {
 	d := apd.New(0, 0)
-	apd.BaseContext.WithPrecision(uint32(x.NumDigits()) + uint32(precision)).Quantize(d, x, int32(-precision))
+	apd.BaseContext.WithPrecision(uint32(x.NumDigits())+uint32(precision)).Quantize(d, x, int32(-precision))
 	return formatNumberString(d.Text('f'), precision, thousand, decimalStr)
 }
 
