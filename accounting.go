@@ -16,29 +16,27 @@ type Accounting struct {
 	Format         string // simple format string allows control of symbol position (%v = value, %s = symbol) (default: %s%v)
 	FormatNegative string // format string for negative values (optional / default: strings.Replace(strings.Replace(accounting.Format, "-", "", -1), "%v", "-%v", -1))
 	FormatZero     string // format string for zero values (optional / default: Format)
-	isInitialized bool // is set to true if used via DefaultAccounting or NewAccounting
+	isInitialized  bool   // is set to true if used via DefaultAccounting or NewAccounting
 }
-
 
 // DefaultAccounting returns the Accounting with default settings
 func DefaultAccounting(symbol string, precision int) *Accounting {
-	ac := &Accounting{Symbol:symbol,Precision:precision}
+	ac := &Accounting{Symbol: symbol, Precision: precision}
 	ac.init()
 	ac.isInitialized = true
 	return ac
 }
 
-
 // NewAccounting returns the Accounting with default settings
 func NewAccounting(symbol string, precision int, thousand, decimal, format, formatNegative, formatZero string) *Accounting {
 	ac := &Accounting{
-		Symbol: symbol,
-		Precision: precision,
-		Thousand: thousand,
-		Decimal: decimal,
-		Format: format,
+		Symbol:         symbol,
+		Precision:      precision,
+		Thousand:       thousand,
+		Decimal:        decimal,
+		Format:         format,
 		FormatNegative: formatNegative,
-		FormatZero: formatZero,
+		FormatZero:     formatZero,
 	}
 	ac.isInitialized = true
 	return ac
