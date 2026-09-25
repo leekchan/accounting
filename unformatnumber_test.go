@@ -4,6 +4,10 @@ import (
 	"testing"
 )
 
+func TestUnformatNumberDoesNotTreatABrokenDecimalAsZero(t *testing.T) {
+	AssertEqual(t, UnformatNumber("1.2.3", 2, "USD"), "1.2.3")
+}
+
 func TestUnformatNumberCommaDecimal(t *testing.T) {
 	AssertEqual(t, UnformatNumber("$4,500.23", 2, "USD"), "4500.23")
 }
