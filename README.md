@@ -400,5 +400,24 @@ UnformatNumber is the inverse of FormatNumber. It strips out all currency format
 ```Go
 fmt.Println(accounting.UnformatNumber("$45,000.50", 2, "USD")) // "45000.50"
 fmt.Println(accounting.UnformatNumber("EUR 12.500,3474", 3, "EUR")) // "12500.347"
+fmt.Println(accounting.UnformatNumber("abc", 2, "USD")) // "0.00"
+```
+
+UnformatNumber panics if the currency is not found in LocaleInfo, and returns zero if the input does not contain a valid number. Use UnformatNumberStrict to detect those cases.
+
+## UnformatNumberStrict(number string, precision int, currency string) (string, error)
+
+UnformatNumberStrict is like UnformatNumber, but it returns an error instead of panicking for an unknown currency (`ErrUnknownCurrency`), and instead of returning zero for input that does not contain a valid number, or ±Inf for a number out of the range of float64 (`ErrInvalidNumber`). On success it returns the same result as UnformatNumber.
+
+**Examples:**
+
+```Go
+fmt.Println(accounting.UnformatNumberStrict("$45,000.50", 2, "USD")) // "45000.50" <nil>
+
+_, err := accounting.UnformatNumberStrict("abc", 2, "USD")
+fmt.Println(errors.Is(err, accounting.ErrInvalidNumber)) // true
+
+_, err = accounting.UnformatNumberStrict("$45,000.50", 2, "ZZZ")
+fmt.Println(errors.Is(err, accounting.ErrUnknownCurrency)) // true
 ```
 
