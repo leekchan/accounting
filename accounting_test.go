@@ -50,6 +50,13 @@ func TestAccounting_SetDecimalSeparator(t *testing.T) {
 	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$123,456,789'21")
 }
 
+func TestNewAccountingEmptyFormats(t *testing.T) {
+	accounting := NewAccounting("$", 2, ",", ".", "%s%v", "", "")
+	AssertEqual(t, accounting.FormatMoney(1234), "$1,234.00")
+	AssertEqual(t, accounting.FormatMoney(-1234), "-$1,234.00")
+	AssertEqual(t, accounting.FormatMoney(0), "$0.00")
+}
+
 func TestFormatMoney(t *testing.T) {
 	accounting := DefaultAccounting("$", 2)
 	AssertEqual(t, accounting.FormatMoney(123456789.213123), "$123,456,789.21")
