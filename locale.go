@@ -184,7 +184,7 @@ var LocaleInfo map[string]Locale = map[string]Locale{
 	"UYU": Locale{"Peso Uruguayo", 2, ".", ",", "", "20B1", "&#x20B1;", "$", true},
 	"UZS": Locale{"Uzbekistan Sum", 0, empty, empty, "", empty, empty, "лв", true},
 	"VEF": Locale{"Bolivar", 2, ".", ",", " ", empty, empty, "Bs.", true},
-	"VND": Locale{"Dong", 2, ".", ",", " ", "20AB", "&#x20AB;", "₫", true},
+	"VND": Locale{"Dong", 0, ".", ",", " ", "20AB", "&#x20AB;", "₫", true},
 	"VUV": Locale{"Vatu", 0, ",", "", "", empty, empty, "VT", false},
 	"WST": Locale{"Tala", 0, empty, empty, "", empty, empty, "WST", true},
 	"XAF": Locale{"CFA Franc BEAC", 0, empty, empty, "", empty, empty, "$", true},
