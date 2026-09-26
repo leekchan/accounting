@@ -24,8 +24,10 @@ func UnformatNumber(n string, precision int, currency string) string {
 	r := regexp.MustCompile(`[^0-9-., ]`) // Remove anything thats not a space, comma, or decimal
 	num := r.ReplaceAllString(n, "${1}")
 
-	r = regexp.MustCompile(fmt.Sprintf("\\%v", lc.ThouSep)) // Strip out thousands seperator, whatever it is
-	num = r.ReplaceAllString(num, "${1}")
+	// Strip out thousands seperator, whatever it is
+	if lc.ThouSep != "" {
+		num = strings.Replace(num, lc.ThouSep, "", -1)
+	}
 
 	// Replace decimal seperator with a decimal at specified precision
 	if lc.DecSep != "." {

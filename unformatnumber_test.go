@@ -18,3 +18,9 @@ func TestUnformatNumberDecimalComma(t *testing.T) {
 		UnformatNumber("$45,567.10", 2, "zzz")
 	}()
 }
+
+func TestUnformatNumberEmptyThousandSeparator(t *testing.T) {
+	// ALL and AZN have no thousand separator in LocaleInfo.
+	AssertEqual(t, UnformatNumber("Lek 1234.50", 2, "ALL"), "1234.50")
+	AssertEqual(t, UnformatNumber("Lek 1234.50", 2, "AZN"), "1234.50")
+}
