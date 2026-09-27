@@ -29,7 +29,8 @@ func DefaultAccounting(symbol string, precision int) *Accounting {
 }
 
 
-// NewAccounting returns the Accounting with default settings
+// NewAccounting returns the Accounting with the given settings.
+// Unlike DefaultAccounting, it does not replace blank values with the defaults.
 func NewAccounting(symbol string, precision int, thousand, decimal, format, formatNegative, formatZero string) *Accounting {
 	ac := &Accounting{
 		Symbol: symbol,

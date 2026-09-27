@@ -113,6 +113,8 @@ ac = accounting.Accounting{Symbol: "GBP", Precision: 0,
         Format: "%s %v", FormatNegative: "%s (%v)", FormatZero: "%s --"}
 ```
 
+Unlike DefaultAccounting, NewAccounting does not replace blank values with the defaults above. For example, a blank formatZero formats zero as an empty string. To get the defaults, use DefaultAccounting or the Accounting struct. (FormatMoneyDecimal and FormatMoneyBigFloat are an exception: they fill in the defaults, which also changes the Accounting for later calls.)
+
 ## SetThousandSeparator(str string)
 
 SetThousandSeparator sets the separator for the thousands separation
