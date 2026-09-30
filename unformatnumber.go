@@ -63,9 +63,11 @@ func stripFormatting(n string, lc Locale) string {
 		num = strings.Replace(num, lc.ThouSep, "", -1)
 	}
 
-	// Replace decimal seperator with a decimal
-	if lc.DecSep != "." {
-		num = strings.Replace(num, ",", ".", -1)
+	// Replace the locale decimal separator with a point.
+	// An empty separator is not a comma. CLP groups with "." and has no
+	// decimal separator, so "1,234" is not the number 1.
+	if lc.DecSep != "" && lc.DecSep != "." {
+		num = strings.Replace(num, lc.DecSep, ".", -1)
 	}
 
 	return strings.Trim(num, " ")

@@ -92,3 +92,20 @@ func TestUnformatNumberStrictUnknownCurrency(t *testing.T) {
 	AssertEqual(t, n, "")
 	AssertErrorIs(t, err, ErrUnknownCurrency)
 }
+
+func TestUnformatNumberEmptyDecimalSeparator(t *testing.T) {
+	// CLP groups thousands with "." and has no decimal separator.
+	// A comma is not a decimal point.
+	AssertEqual(t, UnformatNumber("1.234", 0, "CLP"), "1234")
+	AssertEqual(t, UnformatNumber("1,234", 0, "CLP"), "0")
+	// JPY does use "," as the thousands separator.
+	AssertEqual(t, UnformatNumber("1,234", 0, "JPY"), "1234")
+
+	n, err := UnformatNumberStrict("1,234", 0, "CLP")
+	AssertEqual(t, n, "")
+	AssertErrorIs(t, err, ErrInvalidNumber)
+
+	n, err = UnformatNumberStrict("1.234", 0, "CLP")
+	AssertEqual(t, n, "1234")
+	AssertErrorIs(t, err, nil)
+}
