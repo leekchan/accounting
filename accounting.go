@@ -171,7 +171,9 @@ func (accounting *Accounting) FormatMoneyBigDecimal(value *apd.Decimal) string {
 // FormatMoneyDecimal only supports decimal.Decimal value. It is faster than FormatMoney,
 // because it does not do any runtime type evaluation.
 func (accounting *Accounting) FormatMoneyDecimal(value decimal.Decimal) string {
-	accounting.init()
+	if !accounting.isInitialized {
+		accounting.init()
+	}
 	formattedNumber := FormatNumberDecimal(value, accounting.Precision, accounting.Thousand, accounting.Decimal)
 	return accounting.formatMoneyString(formattedNumber)
 }
