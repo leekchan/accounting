@@ -3,6 +3,7 @@ package accounting
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"math/big"
 	"reflect"
 	"strings"
@@ -49,6 +50,29 @@ func formatNumberString(x string, precision int, thousand string, decimalStr str
 	return result + extra
 }
 
+// quantizeBigDecimal returns x rounded to 10^-precision. The apd context
+// precision must be large enough to hold every digit of the quantized result.
+// x.Exponent can be far larger than the digit count of x's coefficient
+// (e.g. 1E+15), in which case the result needs x.NumDigits()+x.Exponent()
+// digits; with the previous NumDigits()+precision digits the Quantize call
+// failed and left the result as NaN.
+func quantizeBigDecimal(x *apd.Decimal, precision int) *apd.Decimal {
+	digits := int64(x.NumDigits()) + int64(precision)
+	if x.Exponent > 0 {
+		digits += int64(x.Exponent)
+	}
+	if digits < 1 {
+		digits = 1
+	}
+	if digits > math.MaxInt32 {
+		digits = math.MaxInt32
+	}
+
+	d := apd.New(0, 0)
+	apd.BaseContext.WithPrecision(uint32(digits)).Quantize(d, x, int32(-precision))
+	return d
+}
+
 // FormatNumber is a base function of the library which formats a number with custom precision and separators.
 // FormatNumber supports various types of value by runtime reflection.
 // If you don't need runtime type evaluation, please refer to FormatNumberInt or FormatNumberFloat64.
@@ -82,10 +106,7 @@ func FormatNumber(value interface{}, precision int, thousand string, decimalStr 
 		case "*big.Rat":
 			x = value.(*big.Rat).FloatString(precision)
 		case "*apd.Decimal":
-			v := value.(*apd.Decimal)
-			d := apd.New(0, 0)
-			apd.BaseContext.WithPrecision(uint32(v.NumDigits()) + uint32(precision)).Quantize(d, v, int32(-precision))
-			x = d.Text('f')
+			x = quantizeBigDecimal(value.(*apd.Decimal), precision).Text('f')
 		case "*decimal.Decimal":
 			x = value.(*decimal.Decimal).StringFixed(int32(precision))
 		default:
@@ -145,8 +166,7 @@ func FormatNumberBigRat(x *big.Rat, precision int, thousand string, decimalStr s
 // FormatNumberBigDecimal only supports *apd.Decimal value.
 // It is faster than FormatNumber, because it does not do any runtime type evaluation.
 func FormatNumberBigDecimal(x *apd.Decimal, precision int, thousand string, decimalStr string) string {
-	d := apd.New(0, 0)
-	apd.BaseContext.WithPrecision(uint32(x.NumDigits()) + uint32(precision)).Quantize(d, x, int32(-precision))
+	d := quantizeBigDecimal(x, precision)
 	return formatNumberString(d.Text('f'), precision, thousand, decimalStr)
 }
 
