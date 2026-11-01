@@ -45,6 +45,7 @@ func TestFormatNumber(t *testing.T) {
 	AssertEqual(t, FormatNumber(apd.New(-123123123, -6), 5, ",", "."), "-123.12312")
 	AssertEqual(t, FormatNumber(apd.New(-12123123, -6), 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumber(apd.New(-1123123, -6), 5, ",", "."), "-1.12312")
+	AssertEqual(t, FormatNumber(apd.New(1, 10), 2, ",", "."), "10,000,000,000.00")
 
 	d1 := decimal.New(123456789213123, -6)
 	d2 := decimal.New(-12345123123, -6)
@@ -132,6 +133,13 @@ func TestFormatNumberBigDecimal(t *testing.T) {
 	AssertEqual(t, FormatNumberBigDecimal(apd.New(-123123123, -6), 5, ",", "."), "-123.12312")
 	AssertEqual(t, FormatNumberBigDecimal(apd.New(-12123123, -6), 5, ",", "."), "-12.12312")
 	AssertEqual(t, FormatNumberBigDecimal(apd.New(-1123123, -6), 5, ",", "."), "-1.12312")
+
+	// values whose exponent is larger than their coefficient digit count
+	// (e.g. 1E+15) used to return "NaN"
+	AssertEqual(t, FormatNumberBigDecimal(apd.New(1, 15), 2, ",", "."), "1,000,000,000,000,000.00")
+	AssertEqual(t, FormatNumberBigDecimal(apd.New(-5, 9), 0, ",", "."), "-5,000,000,000")
+	AssertEqual(t, FormatNumberBigDecimal(apd.New(999, 12), 2, ".", ","), "999.000.000.000.000,00")
+	AssertEqual(t, FormatNumberBigDecimal(apd.New(0, 15), 2, ",", "."), "0.00")
 }
 
 func TestFormatNumberDecimal(t *testing.T) {
