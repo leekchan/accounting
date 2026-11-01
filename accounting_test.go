@@ -154,6 +154,10 @@ func TestFormatMoneyBigDecimal(t *testing.T) {
 	accounting := Accounting{Symbol: "$", Precision: 2}
 	AssertEqual(t, accounting.FormatMoneyBigDecimal(apd.New(123456789213123, -6)), "$123,456,789.21")
 
+	// apd values whose exponent exceeds the coefficient digit count
+	// (e.g. 1E+9) used to be formatted as "NaN".
+	AssertEqual(t, accounting.FormatMoneyBigDecimal(apd.New(1, 9)), "$1,000,000,000.00")
+
 	accounting = Accounting{Symbol: "€", Precision: 2, Thousand: ".", Decimal: ","}
 	AssertEqual(t, accounting.FormatMoneyBigDecimal(apd.New(499999, -2)), "€4.999,99")
 
